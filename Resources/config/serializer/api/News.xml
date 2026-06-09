@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serializer>
+    <class name="Kotaru\Bundle\SuluNewsBundle\Api\News" exclusion-policy="ALL">
+        <virtual-property method="getId" name="id" expose="true" groups="apiNews,partialNews,fullNews" />
+        <virtual-property method="getTitle" name="title" expose="true" groups="apiNews,partialNews,fullNews" />
+        <virtual-property method="getRoute" name="route" expose="true" groups="apiNews,fullNews" />
+        <virtual-property method="getDescription" name="description" expose="true" groups="apiNews,fullNews" />
+        <virtual-property method="getContent" name="content" expose="true" groups="apiNews,fullNews" />
+        <virtual-property method="getImage" name="image" expose="true" groups="apiNews,fullNews" />
+        <virtual-property method="isVisible" name="visible" serialized-name="visible" expose="true" groups="apiNews,fullNews" />
+        <virtual-property method="isExternal" name="external" serialized-name="external" expose="true" groups="apiNews,fullNews" />
+        <virtual-property method="getSource" name="external_url" serialized-name="external_url" expose="true" groups="apiNews,fullNews" />
+        <virtual-property method="getPublishDate" name="publishDate" serialized-name="publishDate" expose="true" groups="apiNews,fullNews" />
+        <virtual-property method="getTags" name="tags" serialized-name="tags" expose="true" groups="apiNews,fullNews" />
+        <virtual-property method="getCategories" name="categories" serialized-name="categories" expose="true" groups="apiNews,fullNews" />
+        <virtual-property method="getGhostLocale" name="ghostLocale" serialized-name="ghostLocale" expose="true" groups="apiNews" />
+        <virtual-property method="getAvailableLocales" name="availableLocales" serialized-name="availableLocales" expose="true"
+            groups="apiNews" />
+        <virtual-property method="getContentLocales" name="contentLocales" serialized-name="contentLocales" expose="true" groups="apiNews" />
+        <virtual-property method="getExtension" name="ext" serialized-name="ext" expose="true" groups="apiNews" />
+
+    </class>
+</serializer>

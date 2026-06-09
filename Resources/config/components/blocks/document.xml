@@ -1,0 +1,54 @@
+<properties xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+    <block name="blocks" default-type="document">
+
+        <types>
+            <type name="document">
+                <meta>
+                    <title>sulu_news.component.document</title>
+                </meta>
+
+                <properties>
+
+                    <section name="customization">
+                        <meta>
+                            <title>sulu_news.customization_section</title>
+                        </meta>
+                        <properties>
+
+                            <xi:include href="../customization.xml"
+                                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+                            xpointer(/sulu:properties/sulu:property)" />
+
+                            <property name="enablePreview" type="checkbox" multilingual="false" colspan="5">
+                                <meta>
+                                    <title> </title>
+                                </meta>
+                                <params>
+                                    <param name="default_value" value="false" />
+                                    <param name="type" value="toggler" />
+                                    <param name="label">
+                                        <meta>
+                                            <title>sulu_news.component.document.preview</title>
+                                        </meta>
+                                    </param>
+                                </params>
+                            </property>
+                        </properties>
+                    </section>
+
+                    <property name="document" type="single_media_selection">
+                        <meta>
+                            <title>sulu_news.component.document</title>
+                        </meta>
+                        <params>
+                            <param name="types" value="document" />
+                        </params>
+                    </property>
+                </properties>
+            </type>
+        </types>
+    </block>
+</properties>

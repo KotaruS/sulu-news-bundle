@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>news_block_settings</key>
+
+    <properties>
+        <section name="screens">
+            <meta>
+                <title>sulu_news_settings.screens</title>
+            </meta>
+            <properties>
+
+                <property name="showOnMobile" type="checkbox" colspan="4" multilingual="false">
+                    <params>
+                        <param name="default_value" value="true" />
+                        <param name="type" value="toggler" />
+                        <param name="label">
+                            <meta>
+                                <title>sulu_preview.smartphone</title>
+                            </meta>
+                        </param>
+                    </params>
+                </property>
+
+                <property name="showOnTablet" type="checkbox" colspan="4" multilingual="false">
+                    <params>
+                        <param name="default_value" value="true" />
+                        <param name="type" value="toggler" />
+                        <param name="label">
+                            <meta>
+                                <title>sulu_preview.tablet</title>
+
+                            </meta>
+                        </param>
+                    </params>
+                </property>
+
+                <property name="showOnDesktop" type="checkbox" colspan="4" multilingual="false">
+                    <params>
+                        <param name="default_value" value="true" />
+                        <param name="type" value="toggler" />
+                        <param name="label">
+                            <meta>
+                                <title>sulu_preview.desktop</title>
+                            </meta>
+                        </param>
+                    </params>
+                </property>
+            </properties>
+        </section>
+
+
+        <section name="appearance">
+            <meta>
+                <title>sulu_news_settings.appearance</title>
+            </meta>
+            <properties>
+                <property name="contentWidth" type="range" multilingual="false" colspan="8">
+                    <meta>
+                        <title>sulu_news_settings.content_width</title>
+                    </meta>
+                    <params>
+                        <param name="default_value" value="40" />
+                        <param name="min" value="40" />
+                        <param name="max" value="120" />
+                        <param name="step" value="40" />
+                        <param name="ticks" value="true" />
+                        <param name="marks" type="collection">
+                            <param name="40">
+                                <meta>
+                                    <title>sulu_news_settings.content_width.narrow</title>
+                                </meta>
+                            </param>
+                            <param name="80">
+                                <meta>
+                                    <title>sulu_news_settings.content_width.base</title>
+                                </meta>
+                            </param>
+                            <param name="120">
+                                <meta>
+                                    <title>sulu_news_settings.content_width.wide</title>
+                                </meta>
+                            </param>
+                        </param>
+                    </params>
+                </property>
+
+                <property name="contentAlignment" type="single_select" colspan="4" multilingual="false">
+                    <meta>
+                        <title>sulu_news_settings.content_alignment</title>
+                    </meta>
+                    <params>
+                        <param name="default_value" value="center" />
+                        <param name="values" type="collection">
+                            <param name="left">
+                                <meta>
+                                    <title>sulu_news_settings.content_alignment.left</title>
+                                </meta>
+                            </param>
+                            <param name="center">
+                                <meta>
+                                    <title>sulu_news_settings.content_alignment.center</title>
+                                </meta>
+                            </param>
+                            <param name="right">
+                                <meta>
+                                    <title>sulu_news_settings.content_alignment.right</title>
+                                </meta>
+                            </param>
+                        </param>
+                    </params>
+                </property>
+
+                <xi:include href="../components/margins.xml"
+                    xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+          xpointer(/sulu:properties/sulu:property)" />
+
+                <property name="roundedCorners" type="range" multilingual="false">
+                    <meta>
+                        <title>sulu_utils.corner_radius</title>
+                    </meta>
+                    <params>
+                        <param name="default_value" value="0" />
+                        <param name="step" value="4" />
+                        <param name="min" value="0" />
+                        <param name="max" value="12" />
+                        <param name="ticks" value="true" />
+                        <param name="marks" type="collection">
+                            <param name="0">
+                                <meta>
+                                    <title>sulu_utils.spacing_scale.none</title>
+                                </meta>
+                            </param>
+                            <param name="4">
+                                <meta>
+                                    <title>sulu_utils.spacing_scale.small</title>
+                                </meta>
+                            </param>
+                            <param name="8">
+                                <meta>
+                                    <title>sulu_utils.spacing_scale.medium</title>
+                                </meta>
+                            </param>
+                            <param name="12">
+                                <meta>
+                                    <title>sulu_utils.spacing_scale.large</title>
+                                </meta>
+                            </param>
+                        </param>
+                    </params>
+                </property>
+            </properties>
+        </section>
+    </properties>
+</form>

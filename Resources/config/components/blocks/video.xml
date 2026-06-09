@@ -1,0 +1,102 @@
+<properties xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+    <block name="blocks" default-type="video">
+
+        <types>
+            <type name="video">
+                <meta>
+                    <title>sulu_news.component.video</title>
+                </meta>
+
+                <properties>
+
+                    <section name="customization">
+                        <meta>
+                            <title>sulu_news.customization_section</title>
+                        </meta>
+                        <properties>
+                            <xi:include href="../customization.xml"
+                                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+                            xpointer(/sulu:properties/sulu:property)" />
+
+                            <property name="fixedWidth" type="text_line" multilingual="false">
+                                <meta>
+                                    <title>sulu_news.component.video.fixed_width</title>
+                                    <info_text>sulu_utils.fixed_width_info</info_text>
+                                </meta>
+                            </property>
+                        </properties>
+                    </section>
+
+                    <section name="content">
+                        <meta>
+                            <title>sulu_page.content</title>
+                        </meta>
+                        <properties>
+                            <property name="external" type="checkbox" multilingual="false">
+                                <params>
+                                    <param name="default_value" value="false" />
+                                    <param name="type" value="toggler" />
+                                    <param name="label">
+                                        <meta>
+                                            <title>sulu_news.component.video.external</title>
+                                        </meta>
+                                    </param>
+                                </params>
+                            </property>
+                            <property name="provider" type="single_select"
+                                visibleCondition="__parent.external == true">
+                                <meta>
+                                    <title>sulu_news.component.video.provider</title>
+                                </meta>
+                                <params>
+                                    <param name="default_value" value="vimeo" />
+                                    <param name="values" type="collection">
+                                        <param name="vimeo">
+                                            <meta>
+                                                <title>sulu_news.component.video.provider.vimeo</title>
+                                            </meta>
+                                        </param>
+                                        <param name="youtube">
+                                            <meta>
+                                                <title>sulu_news.component.video.yprovider.outube</title>
+                                            </meta>
+                                        </param>
+                                    </param>
+                                </params>
+                            </property>
+                            <property name="embed" type="text_area"
+                                visibleCondition="__parent.external == true">
+                                <meta>
+                                    <title>sulu_news.component.video.external.url</title>
+                                </meta>
+                            </property>
+
+                            <property name="video" type="single_media_selection"
+                                visibleCondition="__parent.external != true">
+                                <meta>
+                                    <title>sulu_news.component.video.file</title>
+                                </meta>
+                                <params>
+                                    <param name="types" value="video" />
+                                </params>
+                            </property>
+
+                            <property name="videoTitle" type="text_line">
+                                <meta>
+                                    <title>sulu_news.component.video.title</title>
+                                    <title>sulu_news.component.video.title_info</title>
+                                </meta>
+                                <tag name="sulu.search.field" />
+                            </property>
+
+                        </properties>
+                    </section>
+
+                </properties>
+            </type>
+        </types>
+    </block>
+</properties>

@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+    <key>news</key>
+
+    <properties>
+
+
+        <property name="publishDate" type="datetime" colspan="12">
+            <meta>
+                <title>sulu_news.publish_date</title>
+            </meta>
+        </property>
+
+
+        <property name="image" type="single_media_upload" colspan="3" spaceAfter="9">
+            <meta>
+                <title>sulu_news.header</title>
+                <info_text>sulu_news.upload_on_copy_text</info_text>
+            </meta>
+
+            <params>
+                <param name="upload_text">
+                    <meta>
+                        <title>sulu_news.header</title>
+                        <info_text>sulu_news.upload_info_text</info_text>
+                    </meta>
+                </param>
+                <param name="empty_icon" value="su-image" />
+                <param name="collection_id" type="expression"
+                    value="service('sulu_media.system_collections.manager').getSystemCollection('sulu_news.headers')" />
+                <param name="types" value="image" />
+            </params>
+        </property>
+
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title>sulu_news.title</title>
+            </meta>
+          <params>
+                <param name="headline" value="true" />
+                <param name="max_length" value="255" />
+            </params>
+
+            <tag name="sulu.rlp.part" />
+        </property>
+
+        <property name="route" type="route" mandatory="true" visibleCondition="title">
+            <meta>
+                <title>sulu_news.resource_locator</title>
+            </meta>
+      <params>
+                <param name="mode" value="leaf" />
+                <param name="entity_class" value="Kotaru\Bundle\SuluNewsBundle\Entity\News" />
+                <param name="route_schema" value="/{translator.trans('sulu_news.news_route')}/{implode('-', object)}" />
+            </params>
+        </property>
+
+        <property name="description" type="text_editor">
+            <meta>
+                <title>sulu_news.description</title>
+            </meta>
+        </property>
+
+
+        <property name="external_url" type="url" visibleCondition="external == true">
+            <meta>
+                <title>sulu_news.external_url</title>
+            </meta>
+
+            <params>
+                <param name="schemes" type="collection">
+                    <param name="https://" />
+                </param>
+            </params>
+        </property>
+
+        <block name="content" default-type="textContent" visibleCondition="!external">
+            <meta>
+                <title>sulu_news.content</title>
+            </meta>
+
+            <params>
+                <param name="settings_form_key" value="news_block_settings" />
+                <param name="add_button_text">
+                    <meta>
+                        <title>sulu_news.add_content_block</title>
+                    </meta>
+                </param>
+            </params>
+
+            <types>
+
+                <xi:include href="../components/news-blocks.xml"
+                    xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+        xpointer(/sulu:properties/sulu:block/sulu:types/sulu:type)" />
+
+            </types>
+        </block>
+
+
+    </properties>
+</form>

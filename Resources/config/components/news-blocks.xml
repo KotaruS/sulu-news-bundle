@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<properties xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+    <block name="blocks" default-type="textContent">
+
+        <types>
+            <xi:include href="./blocks/text.xml"
+                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+        xpointer(/sulu:properties/sulu:block/sulu:types/sulu:type)" />
+
+            <xi:include href="./blocks/heading.xml"
+                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+        xpointer(/sulu:properties/sulu:block/sulu:types/sulu:type)" />
+
+            <xi:include href="./blocks/image.xml"
+                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+        xpointer(/sulu:properties/sulu:block/sulu:types/sulu:type)" />
+
+            <xi:include href="./blocks/quote.xml"
+                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+        xpointer(/sulu:properties/sulu:block/sulu:types/sulu:type)" />
+
+            <xi:include href="./blocks/gallery.xml"
+                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+        xpointer(/sulu:properties/sulu:block/sulu:types/sulu:type)" />
+
+            <xi:include href="./blocks/spacer.xml"
+                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+        xpointer(/sulu:properties/sulu:block/sulu:types/sulu:type)" />
+
+            <xi:include href="./blocks/video.xml"
+                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+        xpointer(/sulu:properties/sulu:block/sulu:types/sulu:type)" />
+
+            <xi:include href="./blocks/document.xml"
+                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+        xpointer(/sulu:properties/sulu:block/sulu:types/sulu:type)" />
+
+            <xi:include href="./blocks/code.xml"
+                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+        xpointer(/sulu:properties/sulu:block/sulu:types/sulu:type)" />
+
+            <xi:include href="./blocks/button.xml"
+                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+        xpointer(/sulu:properties/sulu:block/sulu:types/sulu:type)" />
+
+        </types>
+    </block>
+</properties>

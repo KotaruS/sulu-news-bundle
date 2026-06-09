@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<properties xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <property name="marginTop" type="single_select" colspan="6" multilingual="false">
+        <meta>
+            <title>sulu_utils.margin_top</title>
+
+        </meta>
+        <params>
+            <param name="default_value" value="4" />
+            <param name="values" type="collection">
+                <param name="none">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.none</title>
+                    </meta>
+                </param>
+                <param name="2">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.small</title>
+                    </meta>
+                </param>
+                <param name="4">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.medium</title>
+                    </meta>
+                </param>
+                <param name="6">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.large</title>
+                    </meta>
+                </param>
+                <param name="8">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.larger</title>
+                    </meta>
+                </param>
+                <param name="10">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.huge</title>
+                    </meta>
+                </param>
+            </param>
+        </params>
+    </property>
+
+    <property name="marginBottom" type="single_select" colspan="6" multilingual="false">
+        <meta>
+            <title>sulu_utils.margin_bottom</title>
+        </meta>
+        <params>
+            <param name="default_value" value="4" />
+            <param name="values" type="collection">
+                <param name="none">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.none</title>
+                    </meta>
+                </param>
+                <param name="2">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.small</title>
+                    </meta>
+                </param>
+                <param name="4">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.medium</title>
+                    </meta>
+                </param>
+                <param name="6">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.large</title>
+                    </meta>
+                </param>
+                <param name="8">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.larger</title>
+                    </meta>
+                </param>
+                <param name="10">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.huge</title>
+                    </meta>
+                </param>
+            </param>
+        </params>
+    </property>
+
+    <property name="paddingTop" type="single_select" colspan="6" multilingual="false">
+        <meta>
+            <title>sulu_utils.padding_top</title>
+        </meta>
+        <params>
+            <param name="default_value" value="none" />
+            <param name="values" type="collection">
+                <param name="none">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.none</title>
+                    </meta>
+                </param>
+                <param name="2">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.small</title>
+                    </meta>
+                </param>
+                <param name="4">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.medium</title>
+                    </meta>
+                </param>
+                <param name="6">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.large</title>
+                    </meta>
+                </param>
+                <param name="8">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.larger</title>
+                    </meta>
+                </param>
+                <param name="10">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.huge</title>
+                    </meta>
+                </param>
+            </param>
+        </params>
+    </property>
+
+    <property name="paddingBottom" type="single_select" colspan="6" multilingual="false">
+        <meta>
+            <title>sulu_utils.padding_bottom</title>
+        </meta>
+        <params>
+            <param name="default_value" value="none" />
+            <param name="values" type="collection">
+                <param name="none">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.none</title>
+                    </meta>
+                </param>
+                <param name="2">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.small</title>
+                    </meta>
+                </param>
+                <param name="4">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.medium</title>
+                    </meta>
+                </param>
+                <param name="6">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.large</title>
+                    </meta>
+                </param>
+                <param name="8">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.larger</title>
+                    </meta>
+                </param>
+                <param name="10">
+                    <meta>
+                        <title>sulu_utils.spacing_scale.huge</title>
+                    </meta>
+                </param>
+            </param>
+        </params>
+    </property>
+</properties>

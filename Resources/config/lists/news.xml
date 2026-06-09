@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>news</key>
+
+    <joins name="translation">
+        <join>
+            <entity-name>Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslation</entity-name>
+            <field-name>Kotaru\Bundle\SuluNewsBundle\Entity\News.translations</field-name>
+            <condition>Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslation.locale = :locale</condition>
+        </join>
+    </joins>
+    <joins name="defaultTranslation">
+        <join>
+            <entity-name>Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslationDefault</entity-name>
+            <field-name>Kotaru\Bundle\SuluNewsBundle\Entity\News.translations</field-name>
+            <condition>Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslationDefault.locale =
+                Kotaru\Bundle\SuluNewsBundle\Entity\News.defaultLocale</condition>
+        </join>
+    </joins>
+
+
+    <joins name="route" ref="translation">
+        <join>
+            <entity-name>%sulu.model.route.class%</entity-name>
+            <field-name>Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslation.route</field-name>
+        </join>
+    </joins>
+
+    <joins name="media" ref="translation">
+        <join>
+            <entity-name>%sulu.model.media.class%</entity-name>
+            <field-name>Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslation.image</field-name>
+        </join>
+    </joins>
+
+    <properties>
+        <property name="id" visibility="no" translation="sulu_admin.id">
+            <field-name>id</field-name>
+            <entity-name>Kotaru\Bundle\SuluNewsBundle\Entity\News</entity-name>
+        </property>
+
+        <property name="image" visibility="yes" translation="sulu_media.image" width="shrink">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.media.class%</entity-name>
+
+            <joins ref="media" />
+            <transformer type="thumbnails" />
+        </property>
+
+        <case-property name="title" visibility="always" searchability="yes" translation="sulu_admin.name" type="title">
+            <field>
+                <field-name>title</field-name>
+                <entity-name>Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslation</entity-name>
+                <joins ref="translation" />
+            </field>
+            <field>
+                <field-name>title</field-name>
+                <entity-name>Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslationDefault</entity-name>
+                <joins ref="defaultTranslation" />
+            </field>
+        </case-property>
+
+        <property name="route" visibility="no" translation="sulu_news.route">
+            <field-name>path</field-name>
+            <entity-name>%sulu.model.route.class%</entity-name>
+
+            <joins ref="route" />
+        </property>
+
+
+        <property name="publishDate" visibility="no" translation="sulu_news.publish_date" type="datetime">
+            <field-name>publishDate</field-name>
+            <entity-name>Kotaru\Bundle\SuluNewsBundle\Entity\News</entity-name>
+
+        </property>
+
+        <property name="changed" visibility="no" translation="sulu_admin.changed" type="datetime">
+            <field-name>changed</field-name>
+            <entity-name>Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslation</entity-name>
+
+            <joins ref="translation" />
+        </property>
+
+        <property name="visible" visibility="yes" translation="sulu_news.visible" type="bool" width="shrink">
+            <field-name>visible</field-name>
+            <entity-name>Kotaru\Bundle\SuluNewsBundle\Entity\News</entity-name>
+
+            <filter type="boolean" />
+        </property>
+
+
+        <!-- just for filtering -->
+        <property name="external" visibility="never" translation="sulu_news.external">
+            <field-name>external</field-name>
+            <entity-name>Kotaru\Bundle\SuluNewsBundle\Entity\News</entity-name>
+            <filter type="boolean" />
+        </property>
+
+
+        <!-- when used as column, the property will lead to duplicated rows for entities with multiple tags -->
+        <property name="tagId" visibility="never" translation="sulu_tag.tags">
+            <field-name>id</field-name>
+            <entity-name>Sulu\Bundle\TagBundle\Entity\Tag</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>Sulu\Bundle\TagBundle\Entity\Tag</entity-name>
+                    <field-name>Kotaru\Bundle\SuluNewsBundle\Entity\News.tags</field-name>
+                </join>
+            </joins>
+
+            <filter type="selection">
+                <params>
+                    <param name="displayProperty" value="name" />
+                    <param name="resourceKey" value="tags" />
+                </params>
+            </filter>
+        </property>
+
+        <!-- when used as column, the property will lead to duplicated rows for entities with multiple categories -->
+        <property name="categoryId" visibility="never" translation="sulu_category.categories">
+            <field-name>id</field-name>
+            <entity-name>Sulu\Bundle\CategoryBundle\Entity\Category</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>Sulu\Bundle\CategoryBundle\Entity\Category</entity-name>
+                    <field-name>Kotaru\Bundle\SuluNewsBundle\Entity\News.categories</field-name>
+                </join>
+            </joins>
+
+            <filter type="selection">
+                <params>
+                    <param name="displayProperty" value="name" />
+                    <param name="resourceKey" value="categories" />
+                </params>
+            </filter>
+        </property>
+
+    </properties>
+</list>

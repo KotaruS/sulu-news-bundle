@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <mapped-superclass name="Kotaru\Bundle\SuluNewsBundle\Entity\News" table="ko_news"
+        repository-class="Kotaru\Bundle\SuluNewsBundle\Repository\NewsRepository">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+
+        <field name="external" column="external" type="boolean" length="191" nullable="false" />
+        <field name="visible" column="visible" type="boolean" length="191" nullable="false" />
+        <field name="publishDate" column="publish_date" type="datetime_immutable" nullable="true" />
+        <field name="defaultLocale" column="default_locale" type="string" length="15" nullable="false" />
+        <field name="source" column="source" type="string" length="2048" nullable="true" />
+
+        <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryInterface">
+            <join-table name="ko_news_categories">
+                <join-columns>
+                    <join-column name="news_id" referenced-column-name="id" on-delete="CASCADE" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="category_id" referenced-column-name="id" on-delete="CASCADE" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Entity\Tag">
+            <join-table name="ko_news_tags">
+                <join-columns>
+                    <join-column name="news_id" referenced-column-name="id" on-delete="CASCADE" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="tag_id" referenced-column-name="id" on-delete="CASCADE" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <one-to-many field="translations" target-entity="Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslation"
+            mapped-by="news" index-by="locale" orphan-removal="true">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
+
+    </mapped-superclass>
+</doctrine-mapping>

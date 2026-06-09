@@ -1,0 +1,53 @@
+<properties xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+    <block name="blocks" default-type="quote">
+
+        <types>
+            <type name="quote">
+                <meta>
+                    <title>sulu_news.component.quote</title>
+                </meta>
+
+                <properties>
+                    <section name="customization">
+                        <meta>
+                            <title>sulu_news.customization_section</title>
+                        </meta>
+                        <properties>
+
+                            <xi:include href="../customization.xml"
+                                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+                            xpointer(/sulu:properties/sulu:property)" />
+
+                            <property name="boxColor" type="color" multilingual="false">
+                                <meta>
+                                    <title lang="cs">Barva pozadí boxu</title>
+                                    <title lang="en">Box Background Color</title>
+                                    <info_text lang="cs">Pokud není zvolena, barva se odvíjí od barvy pozadí.</info_text>
+                                    <info_text lang="en">Unless this color is set, the box color changes automatically based on background color.</info_text>
+                                </meta>
+                            </property>
+
+                        </properties>
+                    </section>
+
+                    <property name="quote" type="text_editor">
+                        <meta>
+                            <title lang="cs">Obsah</title>
+                            <title lang="en">Content</title>
+                        </meta>
+                    </property>
+                    <property name="quoteHighlight" type="text_area">
+                        <meta>
+                            <title lang="cs">Text pod obsahem</title>
+                            <title lang="en">Text under Content</title>
+                        </meta>
+                    </property>
+
+                </properties>
+            </type>
+        </types>
+    </block>
+</properties>

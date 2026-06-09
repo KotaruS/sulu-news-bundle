@@ -1,0 +1,42 @@
+{
+    "id": 19,
+    "title": "test",
+    "route": "/aktualnosci/test",
+    "description": "<p>something, something desc...</p>",
+    "content": [
+        {
+            "type": "textContent",
+            "text": "<p>text block content</p>",
+            "backgroundColor": "#7d75a2"
+        }
+    ],
+    "image": null,
+    "visible": false,
+    "external": false,
+    "external_url": null,
+    "publishDate": "2026-04-07T00:00:00",
+    "tags": [],
+    "categories": [],
+    "ghostLocale": null,
+    "availableLocales": [
+        "pl"
+    ],
+    "contentLocales": [
+        "pl"
+    ],
+    "ext": {
+        "seo": {
+            "title": null,
+            "description": null,
+            "keywords": null,
+            "canonicalUrl": null,
+            "noIndex": null,
+            "noFollow": null,
+            "hideInSitemap": null
+        },
+        "excerpt": {
+            "title": null,
+            "description": null
+        }
+    }
+}

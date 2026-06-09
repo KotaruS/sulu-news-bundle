@@ -1,0 +1,47 @@
+<properties xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+    <block name="blocks" default-type="gallery">
+
+        <types>
+            <type name="gallery">
+                <meta>
+                    <title>sulu_news.component.gallery</title>
+                </meta>
+
+                <properties>
+                    <section name="customization">
+                        <meta>
+                            <title>sulu_news.customization_section</title>
+                        </meta>
+                        <properties>
+
+                            <xi:include href="../customization.xml"
+                                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+                            xpointer(/sulu:properties/sulu:property)" />
+
+
+                        </properties>
+                    </section>
+                    <section name="content">
+                        <meta>
+                            <title>sulu_page.content</title>
+                        </meta>
+                        <properties>
+                            <property name="images" type="media_selection">
+                                <meta>
+                                    <title>sulu_page.images</title>
+                                </meta>
+                                <params>
+                                    <param name="types" value="image" />
+                                </params>
+                            </property>
+
+                        </properties>
+                    </section>
+                </properties>
+            </type>
+        </types>
+    </block>
+</properties>

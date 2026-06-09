@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+    <key>news_settings</key>
+
+    <properties>
+
+
+        <property name="newsHomepage" type="single_page_selection">
+            <meta>
+                <title>sulu_news_settings.news_homepage</title>
+            </meta>
+
+        </property>
+
+    </properties>
+</form>

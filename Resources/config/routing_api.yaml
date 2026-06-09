@@ -1,0 +1,79 @@
+sulu_news.get_news_list:
+    path: "/news.{_format}"
+    methods: GET
+    controller: "sulu_news.controller::getListAction"
+    format: json
+    requirements:
+        _format: json
+
+sulu_news.get_news:
+    path: "/news/{id}.{_format}"
+    methods: GET
+    controller: "sulu_news.controller::getAction"
+    format: json
+    requirements:
+        _format: json
+
+sulu_news.post_news:
+    path: "/news.{_format}"
+    methods: POST
+    controller: "sulu_news.controller::postAction"
+    format: json
+    requirements:
+        _format: json
+
+sulu_news.put_news:
+    path: "/news/{id}.{_format}"
+    methods: PUT
+    controller: "sulu_news.controller::putAction"
+    format: json
+    requirements:
+        _format: json
+
+sulu_news.post_news_trigger:
+    path: "/news/{id}.{_format}"
+    methods: POST
+    controller: "sulu_news.controller::postTriggerAction"
+    format: json
+    requirements:
+        _format: json
+
+sulu_news.delete_news:
+    path: "/news/{id}.{_format}"
+    methods: DELETE
+    controller: "sulu_news.controller::deleteAction"
+    format: json
+    requirements:
+        _format: json
+
+sulu_news.get_news_settings:
+    path: "/settings/news.{_format}"
+    methods: GET
+    controller: "sulu_news.controller::getSettings"
+    format: json
+    requirements:
+        _format: json
+
+sulu_news.post_news_settings:
+    path: "/settings/news.{_format}"
+    methods: POST
+    controller: "sulu_news.controller::postSettings"
+    format: json
+    requirements:
+        _format: json
+
+sulu_news.put_news_settings:
+    path: "/settings/news.{_format}"
+    methods: PUT
+    controller: "sulu_news.controller::putSettings"
+    format: json
+    requirements:
+        _format: json
+
+sulu_news.check_news_permissions:
+    path: "/check/news/{id}.{_format}"
+    methods: GET
+    controller: "sulu_news.auth_controller::checkNews"
+    format: json
+    requirements:
+        _format: json

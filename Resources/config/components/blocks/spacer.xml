@@ -1,0 +1,193 @@
+<properties xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+    <block name="blocks" default-type="spacer">
+
+        <types>
+            <type name="spacer">
+                <meta>
+                    <title>sulu_news.component.spacer</title>
+                </meta>
+
+                <properties>
+                    <section name="customization">
+                        <meta>
+                            <title>sulu_news.customization_section</title>
+                        </meta>
+                        <properties>
+                            <xi:include href="../customization.xml"
+                                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+                            xpointer(/sulu:properties/sulu:property)" />
+
+                        </properties>
+                    </section>
+                    <section name="space">
+                        <meta>
+                            <title>sulu_news_settings.screens</title>
+                        </meta>
+                        <properties>
+
+                            <property name="isMobile" type="checkbox" colspan="4" multilingual="false">
+                                <params>
+                                    <param name="default_value" value="true" />
+                                    <param name="type" value="toggler" />
+                                    <param name="label">
+                                        <meta>
+                                            <title>sulu_preview.smartphone</title>
+                                        </meta>
+                                    </param>
+                                </params>
+                            </property>
+
+
+                            <property name="mobileSize" type="range" multilingual="false" visibleCondition="__parent.isMobile == true">
+                                <meta>
+                                    <title>sulu_news.component.spacer.smartphone.size</title>
+                                </meta>
+                                <params>
+                                    <param name="default_value" value="4" />
+                                    <param name="min" value="4" />
+                                    <param name="max" value="12" />
+                                    <param name="step" value="2" />
+                                    <param name="ticks" value="true" />
+                                    <param name="marks" type="collection">
+                                        <param name="4">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.small</title>
+                                            </meta>
+                                        </param>
+                                        <param name="6">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.medium</title>
+                                            </meta>
+                                        </param>
+                                        <param name="8">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.large</title>
+                                            </meta>
+                                        </param>
+                                        <param name="10">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.larger</title>
+                                            </meta>
+                                        </param>
+                                        <param name="12">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.huge</title>
+                                            </meta>
+                                        </param>
+                                    </param>
+                                </params>
+                            </property>
+
+                            <property name="isTablet" type="checkbox" colspan="4" multilingual="false">
+                                <params>
+                                    <param name="default_value" value="true" />
+                                    <param name="type" value="toggler" />
+                                    <param name="label">
+                                        <meta>
+                                            <title>sulu_preview.tablet</title>
+                                        </meta>
+                                    </param>
+                                </params>
+                            </property>
+
+                            <property name="tabletSize" type="range" multilingual="false" visibleCondition="__parent.isTablet == true">
+                                <meta>
+                                    <title>sulu_news.component.spacer.tablet.size</title>
+                                </meta>
+                                <params>
+                                    <param name="default_value" value="4" />
+                                    <param name="min" value="4" />
+                                    <param name="max" value="12" />
+                                    <param name="step" value="2" />
+                                    <param name="ticks" value="true" />
+                                    <param name="marks" type="collection">
+                                        <param name="4">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.small</title>
+                                            </meta>
+                                        </param>
+                                        <param name="6">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.medium</title>
+                                            </meta>
+                                        </param>
+                                        <param name="8">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.large</title>
+                                            </meta>
+                                        </param>
+                                        <param name="10">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.larger</title>
+                                            </meta>
+                                        </param>
+                                        <param name="12">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.huge</title>
+                                            </meta>
+                                        </param>
+                                    </param>
+                                </params>
+                            </property>
+                            <property name="isDesktop" type="checkbox" colspan="4" multilingual="false">
+                                <params>
+                                    <param name="default_value" value="true" />
+                                    <param name="type" value="toggler" />
+                                    <param name="label">
+                                        <meta>
+                                            <title>sulu_preview.desktop</title>
+                                        </meta>
+                                    </param>
+                                </params>
+                            </property>
+
+                            <property name="desktopSize" type="range" multilingual="false" visibleCondition="__parent.isDesktop == true">
+                                <meta>
+                                    <title>sulu_news.component.spacer.desktop.size</title>
+                                </meta>
+                                <params>
+                                    <param name="default_value" value="4" />
+                                    <param name="min" value="4" />
+                                    <param name="max" value="12" />
+                                    <param name="step" value="2" />
+                                    <param name="ticks" value="true" />
+                                    <param name="marks" type="collection">
+                                        <param name="4">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.small</title>
+                                            </meta>
+                                        </param>
+                                        <param name="6">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.medium</title>
+                                            </meta>
+                                        </param>
+                                        <param name="8">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.large</title>
+                                            </meta>
+                                        </param>
+                                        <param name="10">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.larger</title>
+                                            </meta>
+                                        </param>
+                                        <param name="12">
+                                            <meta>
+                                                <title>sulu_utils.spacing_scale.huge</title>
+                                            </meta>
+                                        </param>
+                                    </param>
+                                </params>
+                            </property>
+                        </properties>
+                    </section>
+
+                </properties>
+            </type>
+        </types>
+    </block>
+</properties>

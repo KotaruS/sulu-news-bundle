@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<properties xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <property name="anchorId" type="text_line">
+        <meta>
+            <title>sulu_utils.anchor</title>
+            <info_text>sulu_utils.anchor_info</info_text>
+        </meta>
+         <params>
+            <param name="pattern" value="^[A-Za-z]+[\w:.-]*$" />
+        </params>
+    </property>
+
+    <property name="backgroundColor" type="color" multilingual="false">
+        <meta>
+            <title>sulu_utils.background_color</title>
+            <info_text>sulu_utils.background_color_info</info_text>
+        </meta>
+    </property>
+
+</properties>

@@ -1,0 +1,114 @@
+<properties xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+    <block name="blocks" default-type="heading">
+
+        <types>
+            <type name="heading">
+                <meta>
+                    <title>sulu_news.component.heading</title>
+                </meta>
+
+                <properties>
+                    <section name="customization">
+                        <meta>
+                            <title>sulu_news.customization_section</title>
+                        </meta>
+                        <properties>
+
+                            <xi:include href="../customization.xml"
+                                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+                            xpointer(/sulu:properties/sulu:property)" />
+
+                            <property name="headingType" type="single_select" colspan="8" multilingual="false">
+                                <meta>
+                                    <title>sulu_news.component.heading.type</title>
+                                    <info_text>sulu_news.component.heading.type_info</info_text>
+                                </meta>
+                                    <params>
+                                    <param name="default_value" value="h2" />
+                                    <param name="values" type="collection">
+                                        <param name="h2">
+                                            <meta>
+                                                <title>sulu_news.component.heading.type.level2</title>
+                                            </meta>
+                                        </param>
+                                        <param name="h3">
+                                            <meta>
+                                                <title>sulu_news.component.heading.type.level3</title>
+                                            </meta>
+                                        </param>
+                                        <param name="h4">
+                                            <meta>
+                                                <title>sulu_news.component.heading.type.level4</title>
+                                            </meta>
+                                        </param>
+                                        <param name="h5">
+                                            <meta>
+                                                <title>sulu_news.component.heading.type.level5</title>
+                                            </meta>
+                                        </param>
+                                    </param>
+                                </params>
+                            </property>
+                            <property name="alignment" type="single_select" colspan="4">
+                                <meta>
+                                    <title>sulu_utils.placement</title>
+                                </meta>
+                                    <params>
+                                    <param name="default_value" value="middle" />
+                                    <param name="values" type="collection">
+                                        <param name="left">
+                                            <meta>
+                                                <title>sulu_utils.placement.left</title>
+                                            </meta>
+                                        </param>
+                                        <param name="middle">
+                                            <meta>
+                                                <title>sulu_utils.placement.middle</title>
+                                            </meta>
+                                        </param>
+                                        <param name="right">
+                                            <meta>
+                                                <title>sulu_utils.placement.right</title>
+                                            </meta>
+                                        </param>
+
+                                    </param>
+                                </params>
+                            </property>
+                        </properties>
+                    </section>
+                    <section name="content">
+                        <meta>
+                            <title>sulu_page.content</title>
+                        </meta>
+                        <properties>
+
+                            <property name="text" type="text_area">
+                                <meta>
+                                    <title>sulu_news.component_content</title>
+                                </meta>
+                                <tag name="sulu.search.field" />
+                            </property>
+
+                            <property name="link" type="link">
+                                <meta>
+                                    <title>sulu_content.link</title>
+                                    <info_text>sulu_utils.empty_link_info</info_text>
+                                </meta>
+                                <params>
+                                    <param name="enable_query" value="true" />
+                                    <param name="enable_anchor" value="true" />
+                                    <param name="enable_attributes" value="true" />
+                                </params>
+                            </property>
+
+                        </properties>
+                    </section>
+                </properties>
+            </type>
+        </types>
+    </block>
+</properties>

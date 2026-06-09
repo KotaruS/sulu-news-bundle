@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serializer>
+    <class name="Kotaru\Bundle\SuluNewsBundle\Entity\News" exclusion-policy="ALL">
+        <virtual-property method="getId" name="id" expose="true" groups="Default,Other" />
+        <virtual-property method="getLocale" name="locale" expose="true" groups="Default,Other" />
+        <virtual-property method="getDefaultLocale" name="defaultLocale" serialized-name="default_locale" expose="true"
+            groups="Default,Other" />
+        <virtual-property method="getTitle" name="title" expose="true" groups="fullNews" />
+        <virtual-property method="getPublishDate" name="publishDate" serialized-name="publish_date" expose="true"
+            groups="partialNews,fullNews" />
+        <virtual-property method="getPath" name="path" expose="true" groups="partialNews,fullNews" />
+        <virtual-property method="getImageId" name="image" expose="true" groups="fullNews" />
+        <virtual-property method="getDescription" name="description" expose="true" groups="fullNews" />
+        <virtual-property method="getContent" name="content" expose="true" groups="fullNews" />
+        <virtual-property method="isVisible" name="visible" serialized-name="visible" expose="true" groups="partialNews,fullNews" />
+        <virtual-property method="isExternal" name="external" serialized-name="external" expose="true" groups="fullNews" />
+        <virtual-property method="getSource" name="externalUrl" serialized-name="external_url" expose="true" groups="fullNews" />
+        <virtual-property method="getCreated" name="created" expose="true" groups="partialNews,fullNews" />
+        <virtual-property method="getChanged" name="changed" expose="true" groups="partialNews,fullNews" />
+        <virtual-property method="getExtension" name="extension" expose="true" groups="fullNews" />
+        <virtual-property method="getCategoriesResolved" name="categories" serialized-name="categories" expose="true" groups="fullNews" />
+        <virtual-property method="getTagsResolved" name="tags" expose="true" serialized-name="tags" groups="fullNews" />
+
+    </class>
+</serializer>

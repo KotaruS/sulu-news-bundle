@@ -1,0 +1,48 @@
+<properties xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+    <block name="blocks" default-type="textContent">
+
+        <types>
+            <type name="textContent">
+                <meta>
+                    <title>sulu_news.component.text</title>
+                </meta>
+
+                <properties>
+                    <section name="customization">
+                        <meta>
+                            <title>sulu_news.customization_section</title>
+                        </meta>
+                        <properties>
+
+                            <xi:include href="../customization.xml"
+                                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)
+                            xpointer(/sulu:properties/sulu:property)" />
+
+                            <property name="listIcon" type="single_media_selection">
+                                <meta>
+                                    <title>sulu_news.component.text.list_icon</title>
+                                    <info_text>sulu_news.component.text.list_icon_info</info_text>
+                                </meta>
+                                    <params>
+                                    <param name="types" value="image" />
+                                </params>
+                            </property>
+                        </properties>
+                    </section>
+
+                    <property name="text" type="text_editor">
+                        <meta>
+                            <title>sulu_news.component_content</title>
+                        </meta>
+                                <tag
+                            name="sulu.search.field" />
+                    </property>
+
+                </properties>
+            </type>
+        </types>
+    </block>
+</properties>
