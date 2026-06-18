@@ -4,6 +4,9 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Kotaru\Bundle\SuluNewsBundle\Admin\NewsAdmin;
+use Kotaru\Bundle\SuluNewsBundle\Domain\Event\NewsCreatedEvent;
+use Kotaru\Bundle\SuluNewsBundle\Domain\Event\NewsModifiedEvent;
+use Kotaru\Bundle\SuluNewsBundle\Listener\NewsEventListener;
 use Kotaru\SuluUtils\Doctrine\DoctrineListRepresentationFactory;
 use Kotaru\SuluUtils\Common\MediaCopier;
 use Kotaru\Bundle\SuluNewsBundle\Content\DataProvider\NewsDataProvider;
@@ -154,6 +157,15 @@ return static function (ContainerConfigurator $container) {
             new Reference('sulu_core.array_serializer'),
         ])
         ->tag('sulu_preview.object_provider', ['provider-key' => NewsInterface::RESOURCE_KEY])
+    ;
+    // Listener
+    $services->set(NewsEventListener::class)
+        ->args([
+            new Reference('sulu_website.http_cache.clearer'),
+            new Reference('sulu_core.webspace.webspace_manager'),
+        ])
+        ->tag('kernel.event_listener', ['event'=> NewsCreatedEvent::class, 'method' => 'clearPageCache', 'priority' => 0])
+        ->tag('kernel.event_listener', ['event'=> NewsModifiedEvent::class, 'method' => 'clearPageCache', 'priority' => 0])
     ;
     // Twig
     $services->set(NewsExtension::class)

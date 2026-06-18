@@ -1,7 +1,7 @@
 {
     "name": "kotaru/sulu-news-bundle",
     "type": "sulu-bundle",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Simple News Bundle for Sulu 2 CMS",
     "keywords": [
         "sulu",
