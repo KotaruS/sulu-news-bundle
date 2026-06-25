@@ -61,14 +61,9 @@ class SuluNewsBundle extends AbstractBundle
                     'metadata' => [
                         'directories' => [
                             [
-                                'name' => 'sulu_news.entity',
+                                'name' => 'sulu_news',
                                 'path' => __DIR__ . '/Resources/config/serializer',
-                                'namespace_prefix' => 'Kotaru\Bundle\SuluNewsBundle\Entity',
-                            ],
-                            [
-                                'name' => 'sulu_news.api',
-                                'path' => __DIR__ . '/Resources/config/serializer/api',
-                                'namespace_prefix' => 'Kotaru\Bundle\SuluNewsBundle\Api',
+                                'namespace_prefix' => 'Kotaru\Bundle\SuluNewsBundle',
                             ],
                         ],
                     ],
@@ -97,7 +92,7 @@ class SuluNewsBundle extends AbstractBundle
                                 'detail' => 'sulu_news.get_news'
                             ],
                         ],
-                        NewsInterface::RESOURCE_KEY .'_settings'=> [
+                        NewsInterface::RESOURCE_KEY . '_settings' => [
                             'routes' => [
                                 'detail' => 'sulu_news.get_news_settings'
                             ],
@@ -166,22 +161,22 @@ class SuluNewsBundle extends AbstractBundle
         $root = $definition->rootNode();
 
         $root->children()
-                ->arrayNode('objects')->addDefaultsIfNotSet()
-                    ->children()
-                        ->arrayNode('news')->addDefaultsIfNotSet()
-                            ->children()
-                                ->scalarNode('model')->defaultValue(News::class)->end()
-                                ->scalarNode('repository')->defaultValue(NewsRepository::class)->end()
-                            ->end()
-                        ->end()
-                        ->arrayNode('news_translation')->addDefaultsIfNotSet()
-                            ->children()
-                                ->scalarNode('model')->defaultValue(NewsTranslation::class)->end()
-                                ->scalarNode('repository')->defaultValue(NewsTranslationRepository::class)->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
+            ->arrayNode('objects')->addDefaultsIfNotSet()
+            ->children()
+            ->arrayNode('news')->addDefaultsIfNotSet()
+            ->children()
+            ->scalarNode('model')->defaultValue(News::class)->end()
+            ->scalarNode('repository')->defaultValue(NewsRepository::class)->end()
+            ->end()
+            ->end()
+            ->arrayNode('news_translation')->addDefaultsIfNotSet()
+            ->children()
+            ->scalarNode('model')->defaultValue(NewsTranslation::class)->end()
+            ->scalarNode('repository')->defaultValue(NewsTranslationRepository::class)->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end()
             ->end();
     }
 

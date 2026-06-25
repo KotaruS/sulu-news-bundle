@@ -8,8 +8,8 @@
         <virtual-property method="getTitle" name="title" expose="true" groups="fullNews" />
         <virtual-property method="getPublishDate" name="publishDate" serialized-name="publish_date" expose="true"
             groups="partialNews,fullNews" />
-        <virtual-property method="getPath" name="path" expose="true" groups="partialNews,fullNews" />
-        <virtual-property method="getImageId" name="image" expose="true" groups="fullNews" />
+        <virtual-property method="getPath" name="path" expose="true" serialized-name="path" groups="partialNews,fullNews" />
+        <virtual-property method="getImageId" name="image" expose="true" serialized-name="image" groups="fullNews" />
         <virtual-property method="getDescription" name="description" expose="true" groups="fullNews" />
         <virtual-property method="getContent" name="content" expose="true" groups="fullNews" />
         <virtual-property method="isVisible" name="visible" serialized-name="visible" expose="true" groups="partialNews,fullNews" />
