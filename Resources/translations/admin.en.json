@@ -14,6 +14,7 @@
     "sulu_news.external": "External News",
     "sulu_news.external_url": "External URL",
     "sulu_news.visible": "Active",
+    "sulu_news.empty_list": "No news selected",
     "sulu_news_settings.form": "Settings",
     "sulu_news_settings": "News Settings",
     "sulu_news_settings.screens": "Screen Visibility",

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kotaru\Bundle\SuluNewsBundle;
 
+use Kotaru\Bundle\SuluNewsBundle\Admin\NewsAdmin;
 use Kotaru\Bundle\SuluNewsBundle\Entity\News;
 use Kotaru\Bundle\SuluNewsBundle\Entity\NewsInterface;
 use Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslation;
@@ -123,7 +124,6 @@ class SuluNewsBundle extends AbstractBundle
 
         if ($container->hasExtension('sulu_route')) {
             $configurator->extension(
-
                 'sulu_route',
                 [
                     'mappings' => [
@@ -151,6 +151,32 @@ class SuluNewsBundle extends AbstractBundle
                 ]
             );
 
+        }
+          if ($container->hasExtension('sulu_search')) {
+            $container->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'indexes' => [
+                        NewsInterface::RESOURCE_KEY . '_published' => [
+                            'name' => 'sulu_news.search.index.news',
+                            'icon' => 'su-news',
+                            'view' => [
+                                'name' => NewsAdmin::EDIT_FORM_VIEW,
+                                'result_to_view' => [
+                                    'id' => 'id',
+                                    'locale' => 'locale',
+                                ],
+                            ],
+                            'security_context' => NewsAdmin::SECURITY_CONTEXT,
+                        ]
+                    ],
+                    'website' => [
+                        'indexes' => [
+                             NewsInterface::RESOURCE_KEY . '_published',
+                        ],
+                    ]
+                ]
+            );
         }
     }
 

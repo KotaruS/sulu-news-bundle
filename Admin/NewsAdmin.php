@@ -26,7 +26,7 @@ class NewsAdmin extends Admin
     use AdminHelpersTrait;
 
     public const SECURITY_CONTEXT_GROUP = 'News';
-    public const ADMIN_KEY = 'app_admin';
+    public const ADMIN_KEY = 'sulu_news';
 
     public const SECURITY_CONTEXT = 'news';
 
@@ -34,21 +34,21 @@ class NewsAdmin extends Admin
 
     public const LIST_KEY = 'news';
 
-    public const VIEW = 'app.news';
+    public const VIEW = 'sulu_news';
 
-    public const SETTINGS_VIEW = 'app.news_settings';
+    public const SETTINGS_VIEW = 'sulu_news_settings';
 
-    public const LIST_VIEW = 'app.news_list';
+    public const LIST_VIEW = 'sulu_news_list';
 
-    public const IMPORT_VIEW = 'app.news_import';
+    public const IMPORT_VIEW = 'sulu_news_import';
 
     public const IMPORT_FORM_KEY = 'news_import';
 
     public const DETAIL_FORM_KEY = 'news';
 
-    public const ADD_FORM_VIEW = 'app.news_add_form';
+    public const ADD_FORM_VIEW = 'sulu_news_add_form';
 
-    public const EDIT_FORM_VIEW = 'app.news_edit_form';
+    public const EDIT_FORM_VIEW = 'sulu_news_edit_form';
 
 
     public function __construct(

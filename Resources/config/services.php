@@ -4,25 +4,30 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Kotaru\Bundle\SuluNewsBundle\Admin\NewsAdmin;
-use Kotaru\Bundle\SuluNewsBundle\Domain\Event\NewsCreatedEvent;
-use Kotaru\Bundle\SuluNewsBundle\Domain\Event\NewsModifiedEvent;
-use Kotaru\Bundle\SuluNewsBundle\Listener\NewsEventListener;
-use Kotaru\SuluUtils\Doctrine\DoctrineListRepresentationFactory;
-use Kotaru\SuluUtils\Common\MediaCopier;
 use Kotaru\Bundle\SuluNewsBundle\Content\DataProvider\NewsDataProvider;
 use Kotaru\Bundle\SuluNewsBundle\Controller\Admin\AuthController;
 use Kotaru\Bundle\SuluNewsBundle\Controller\Admin\NewsController;
 use Kotaru\Bundle\SuluNewsBundle\Controller\Website\NewsWebsiteController;
+use Kotaru\Bundle\SuluNewsBundle\Domain\Event\NewsCreatedEvent;
+use Kotaru\Bundle\SuluNewsBundle\Domain\Event\NewsModifiedEvent;
+use Kotaru\Bundle\SuluNewsBundle\Domain\Event\NewsRemovedEvent;
 use Kotaru\Bundle\SuluNewsBundle\Entity\News;
 use Kotaru\Bundle\SuluNewsBundle\Entity\NewsInterface;
 use Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslation;
+use Kotaru\Bundle\SuluNewsBundle\Event\NewsSearchDeindexEvent;
+use Kotaru\Bundle\SuluNewsBundle\Event\NewsSearchIndexEvent;
+use Kotaru\Bundle\SuluNewsBundle\Link\NewsLinkProvider;
+use Kotaru\Bundle\SuluNewsBundle\Listener\NewsEventListener;
+use Kotaru\Bundle\SuluNewsBundle\Listener\NewsSearchListener;
 use Kotaru\Bundle\SuluNewsBundle\Manager\NewsManager;
-use Kotaru\SuluUtils\Manager\SuluMediaManager;
 use Kotaru\Bundle\SuluNewsBundle\Preview\NewsPreviewObjectProvider;
 use Kotaru\Bundle\SuluNewsBundle\Repository\NewsRepository;
 use Kotaru\Bundle\SuluNewsBundle\Repository\NewsTranslationRepository;
 use Kotaru\Bundle\SuluNewsBundle\Routing\NewsRouteDefaultProvider;
 use Kotaru\Bundle\SuluNewsBundle\Twig\NewsExtension;
+use Kotaru\SuluUtils\Common\MediaCopier;
+use Kotaru\SuluUtils\Doctrine\DoctrineListRepresentationFactory;
+use Kotaru\SuluUtils\Manager\SuluMediaManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
@@ -79,6 +84,8 @@ return static function (ContainerConfigurator $container) {
             new Reference('sulu.repository.category'),
             new Reference('sulu_tag.tag_manager'),
             new Reference(MediaCopier::class),
+            new Reference('sulu_activity.domain_event_collector'),
+            new Reference('event_dispatcher'),
         ])
     ;
 
@@ -91,7 +98,6 @@ return static function (ContainerConfigurator $container) {
             new Reference('doctrine.orm.entity_manager'),
             new Reference(NewsManager::class),
             new Reference('sulu_media.media_manager'),
-            new Reference('sulu_activity.domain_event_collector'),
         ])
         ->tag('controller.service_arguments')
         ->tag('container.service_subscriber')
@@ -148,6 +154,14 @@ return static function (ContainerConfigurator $container) {
         ])
         ->tag('sulu_route.defaults_provider')
     ;
+    // Link
+    $services->set(NewsLinkProvider::class)
+        ->args([
+            new Reference('sulu_news.news_repository'),
+            new Reference('translator'),
+        ])
+        ->tag('sulu.link.provider', ['alias' => NewsInterface::RESOURCE_KEY])
+    ;
     // Preview
     $services->set(NewsPreviewObjectProvider::class)
         ->args([
@@ -158,7 +172,7 @@ return static function (ContainerConfigurator $container) {
         ])
         ->tag('sulu_preview.object_provider', ['provider-key' => NewsInterface::RESOURCE_KEY])
     ;
-    // Listener
+    // Listeners
     $services->set(NewsEventListener::class)
         ->args([
             new Reference('sulu_website.http_cache.clearer'),
@@ -167,6 +181,14 @@ return static function (ContainerConfigurator $container) {
         ->tag('kernel.event_listener', ['event'=> NewsCreatedEvent::class, 'method' => 'clearPageCache', 'priority' => 0])
         ->tag('kernel.event_listener', ['event'=> NewsModifiedEvent::class, 'method' => 'clearPageCache', 'priority' => 0])
     ;
+    $services->set(NewsSearchListener::class)
+        ->args([
+            new Reference('massive_search.search_manager'),
+        ])
+        ->tag('kernel.event_listener', ['event'=> NewsSearchIndexEvent::class, 'method' => 'reindex', 'priority' => 0])
+        ->tag('kernel.event_listener', ['event'=> NewsSearchDeindexEvent::class, 'method' => 'deindex', 'priority' => 0])
+    ;
+
     // Twig
     $services->set(NewsExtension::class)
         ->args([

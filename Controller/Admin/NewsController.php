@@ -48,7 +48,6 @@ class NewsController extends AbstractController implements SecuredControllerInte
         private readonly EntityManagerInterface $entityManager,
         protected NewsManager $newsManager,
         private MediaManagerInterface $mediaManager,
-        protected DomainEventCollectorInterface $domainEventCollector,
     ) {
     }
 
@@ -76,22 +75,7 @@ class NewsController extends AbstractController implements SecuredControllerInte
         }
         $requestData = $request->toArray();
 
-
-        $news = $this->create($locale);
-        $this->save($news);
-        $this->flush();
-
-        $this->domainEventCollector->collect(
-            new NewsCreatedEvent($news)
-        );
-
-        $this->newsManager->mapDataToEntity($requestData, $news);
-        if (null === $news->getPublishDate()) {
-            $news->setPublishDate(new \DateTimeImmutable('now'));
-        }
-        $this->save($news);
-
-        $this->flush();
+        $news = $this->newsManager->create($locale, $requestData);
 
         $apiEntity = $this->generateApiEntity($news);
         $result = $this->getApiEntityData($apiEntity);
@@ -113,14 +97,8 @@ class NewsController extends AbstractController implements SecuredControllerInte
 
         $requestData = $request->toArray();
 
-        $this->newsManager->mapDataToEntity($requestData, $news);
+        $news = $this->newsManager->update($news, $requestData);
 
-        $this->save($news);
-
-        $this->domainEventCollector->collect(
-            new NewsModifiedEvent($news)
-        );
-        $this->flush();
         $apiEntity = $this->generateApiEntity($news);
         $result = $this->getApiEntityData($apiEntity);
 
@@ -130,6 +108,7 @@ class NewsController extends AbstractController implements SecuredControllerInte
     public function postTriggerAction(int $id, Request $request): Response
     {
         $action = $request->query->get('action');
+        $request->setRequestFormat('json');
 
         if ('copy' === $action) {
             $locale = $request->getLocale();
@@ -137,17 +116,11 @@ class NewsController extends AbstractController implements SecuredControllerInte
             if (!$news) {
                 throw new NotFoundHttpException();
             }
-            $newNews = $this->duplicate($news);
-            $this->domainEventCollector->collect(
-                new NewsCreatedEvent($newNews)
-            );
-            $this->flush();
+            $newNews = $this->newsManager->copy($news);
 
-            $request->setRequestFormat('json');
             return $this->json(data: ['id' => $newNews->getId()], context: static::JSON_OPTIONS);
         }
         $locale = $this->getLocale($request);
-        $request->setRequestFormat('json');
         if (null === $locale) {
             throw new BadRequestException("Missing locale query parameter.", 400);
         }
@@ -158,24 +131,21 @@ class NewsController extends AbstractController implements SecuredControllerInte
 
         match ($action) {
             'enable', 'disable' => \call_user_func(function ($news, $action) {
-                    $news->setVisible($action === 'enable' ? true : false);
-                    $this->save($news);
+                    if ($action === 'enable') {
+                        $this->newsManager->enable($news);
+                    } else {
+                        $this->newsManager->disable($news);
+                    }
                 }, $news, $action),
             'set-external', 'unset-external' => \call_user_func(function ($news, $action) {
-                    $news->setExternal($action === 'set-external' ? true : false);
-                    $this->save($news);
+                    $this->newsManager->update($news, ['external' => $action === 'set-external']);
                 }, $news, $action),
             'copy-locale' => \call_user_func(function ($news, $request) {
                     $fromLocale = $request->query->get('src') ?? $this->getLocale($request);
                     $toLocales = \explode(',', $request->query->get('dest'));
-                    return $this->copyLocale($news, from: $fromLocale, to: $toLocales);
+                    $news = $this->newsManager->copyLocale($news, from: $fromLocale, to: $toLocales);
                 }, $news, $request),
         };
-
-        $this->domainEventCollector->collect(
-            new NewsModifiedEvent($news)
-        );
-        $this->flush();
 
         $apiEntity = $this->generateApiEntity($news);
         $result = $this->getApiEntityData($apiEntity);
@@ -193,15 +163,11 @@ class NewsController extends AbstractController implements SecuredControllerInte
 
         if ('true' === $request->query->get('deleteLocale')) {
             $this->newsManager->removeTranslation($news, $locale);
-            $this->flush();
+
             return $this->json(null, 204);
         }
 
         $this->newsManager->remove($news);
-        $this->domainEventCollector->collect(
-            new NewsRemovedEvent($id, $news->getTitle() ?? '')
-        );
-        $this->flush();
 
         return $this->json(null, 204);
     }
@@ -323,70 +289,6 @@ class NewsController extends AbstractController implements SecuredControllerInte
             }
         }
         return $items;
-    }
-    protected function duplicate(NewsInterface $entity): ?NewsInterface
-    {
-        $initialLocale = $entity->getLocale();
-        $clonedNews = $this->newsManager->fullClone($entity);
-        $clonedNews->setExternal(false);
-        $clonedNews->setSource(null);
-        $clonedNews->setVisible(false);
-        foreach ($clonedNews->getTranslations() as $locale => $translation) {
-            $clonedNews->setLocale($locale);
-            $clonedNews->setTitle($clonedNews->getTitle() . ' (1)');
-            $this->newsManager->setRoute($clonedNews);
-        }
-        $clonedNews->setLocale($initialLocale);
-        $this->save($clonedNews);
-        return $clonedNews;
-    }
-
-
-    protected function copyLocale(NewsInterface $entity, string $from, array $to): ?NewsInterface
-    {
-        if (empty($to)) {
-            throw new \InvalidArgumentException('Destination url paremeter must be defined');
-        }
-        $originalLocale = $entity->getLocale();
-        foreach ($to as $targetLocale) {
-            if ($from === $targetLocale) {
-                continue;
-            }
-            $entity->setLocale($targetLocale);
-            $copyTranslation = $entity->getTranslation($from);
-            if (null === $entity->getTranslation($targetLocale)) {
-                $entity->createTranslation($targetLocale);
-            }
-            $newTranslation = $entity->getTranslation($targetLocale);
-            $newTranslation
-                ->setTitle($copyTranslation->getTitle())
-                ->setContent($copyTranslation->getContent())
-                ->setExtension($copyTranslation->getExtension())
-                ->setDescription($copyTranslation->getDescription());
-
-            /** @var MediaInterface */
-            $image = $copyTranslation->getImage();
-            if (null !== $image) {
-                $image = $this->newsManager->getImageCopy($image);
-            }
-            if (null !== $newTranslation->getImage()) {
-                $this->mediaManager->delete($newTranslation->getImage()->getId());
-            }
-            $newTranslation->setImage($image);
-
-            if (empty($newTranslation->getTitle())) {
-                throw new UnprocessableEntityHttpException('Cannot save entity without title.');
-            }
-
-            $this->save($entity);
-            if (null === $newTranslation->getRoute()) {
-                $this->newsManager->generateRoute($entity);
-            } else {
-                $this->newsManager->updateRoute($entity);
-            }
-        }
-        $entity->setLocale($originalLocale);
-        return $entity;
     }
 
 

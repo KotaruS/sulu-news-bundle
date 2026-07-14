@@ -55,16 +55,7 @@ class News implements NewsInterface
 
     public function getPath(): ?string
     {
-        $route = $this->getRoute();
-        if (!$route) {
-            return null;
-        }
-        $locale = $this->getLocale();
-        $path = $route->getPath();
-        if ($locale !== 'cs') {
-            $path = '/' . $locale . $path;
-        }
-        return $path;
+        return $this->getTranslationValue(__FUNCTION__);
     }
     public function getRoute(): ?RouteInterface
     {
@@ -78,12 +69,9 @@ class News implements NewsInterface
 
     public function getImageId(): ?array
     {
-        $image = $this->getTranslationValue('getImage');
-        if (isset($image)) {
-            return ['id' => $image->getId()];
-        }
-        return null;
-    }
+       return $this->getTranslationValue(__FUNCTION__);
+       }
+      
     public function getImage(): ?MediaInterface
     {
         return $this->getTranslationValue(__FUNCTION__);

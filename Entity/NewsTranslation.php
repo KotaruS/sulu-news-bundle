@@ -56,7 +56,19 @@ class NewsTranslation implements AuditableInterface
 
         return $this;
     }
-
+  public function getPath(): ?string
+    {
+        $route = $this->getRoute();
+        if (!$route) {
+            return null;
+        }
+        $locale = $this->getLocale();
+        $path = $route->getPath();
+        if ($locale !== 'cs') {
+            $path = '/' . $locale . $path;
+        }
+        return $path;
+    }
     public function getRoute(): ?RouteInterface
     {
         return $this->route;
@@ -93,11 +105,24 @@ class NewsTranslation implements AuditableInterface
     {
         return $this->image;
     }
+
+    public function getImageId(): ?array
+    {
+        if (isset($this->image)) {
+            return ['id' => $this->image->getId()];
+        }
+        return null;
+    }
     public function setImage(?MediaInterface $image): static
     {
         $this->image = $image;
 
         return $this;
+    }
+
+    public function getNews(): NewsInterface
+    {
+        return $this->news;
     }
 
     public function setNews(NewsInterface $news): static
@@ -106,6 +131,7 @@ class NewsTranslation implements AuditableInterface
 
         return $this;
     }
+
     public function __clone(): void
     {
         if ($this->id) {

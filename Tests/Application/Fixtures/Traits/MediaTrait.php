@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Fixtures\Traits;
+namespace Kotaru\Bundle\SuluNewsBundle\Tests\Application\Fixtures\Traits;
 
 use Doctrine\Persistence\ObjectManager;
 use SplFileInfo;

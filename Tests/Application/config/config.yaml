@@ -3,3 +3,6 @@
 sulu_core:
     webspace:
         config_dir: "%kernel.project_dir%/tests/Application/config/webspaces"
+
+parameters:
+    default_locale: cs

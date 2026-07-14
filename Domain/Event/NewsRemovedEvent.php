@@ -9,18 +9,14 @@ use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 class NewsRemovedEvent extends DomainEvent
 {
 
-    private int $newsId;
-
-    private string $newsTitle;
+    private NewsInterface $news;
 
     public function __construct(
-        int $newsId,
-        string $newsTitle,
+        NewsInterface $news,
     ) {
         parent::__construct();
 
-        $this->newsId = $newsId;
-        $this->newsTitle = $newsTitle;
+        $this->news = $news;
     }
 
     public function getEventType(): string
@@ -35,14 +31,22 @@ class NewsRemovedEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return (string) $this->newsId;
+        return (string) $this->news->getId();
     }
 
     public function getResourceTitle(): ?string
     {
-        return $this->newsTitle;
+        return $this->news->getTitle();
     }
 
+    public function getResourceLocale(): ?string
+    {
+        return $this->news->getLocale();
+    }
+    public function getResourceEntity(): NewsInterface
+    {
+        return $this->news;
+    }
     public function getResourceSecurityContext(): ?string
     {
         return NewsAdmin::SECURITY_CONTEXT;

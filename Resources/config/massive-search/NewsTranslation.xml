@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
+    <mapping class="Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslation">
+        <index value="'news' ~ (object.getNews().isVisible() ? '_published' : '')" expr="'news' ~ (object.getNews().isVisible() ? '_published' : '')"/>
+        <id property="id"/>
+        <title expr="object.getTitle()"/>
+        <description expr="object.getDescription()"/>
+        <url expr="object.getPath()" />
+        <locale property="locale"/>
+        <fields>
+            <field name="title" expr="object.getTitle()" type="string"/>
+            <field name="description" expr="object.getDescription()" type="string"/>
+            <field name="imageId" expr="object.getImageId()" type="string"/>
+        </fields>
+    </mapping>
+</massive-search-mapping>

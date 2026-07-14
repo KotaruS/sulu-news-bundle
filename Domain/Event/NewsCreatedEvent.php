@@ -43,6 +43,10 @@ class NewsCreatedEvent extends DomainEvent
     {
         return $this->news->getLocale();
     }
+    public function getResourceEntity(): NewsInterface
+    {
+        return $this->news;
+    }
 
     public function getResourceSecurityContext(): ?string
     {

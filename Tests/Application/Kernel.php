@@ -14,6 +14,7 @@ namespace Kotaru\Bundle\SuluNewsBundle\Tests\Application;
  */
 
 use Kotaru\Bundle\SuluNewsBundle\SuluNewsBundle;
+use Kotaru\SuluUtils\SuluUtilsBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
@@ -27,6 +28,7 @@ class Kernel extends SuluTestKernel
     {
         /** @var BundleInterface[] $bundles */
         $bundles = parent::registerBundles();
+        $bundles[] = new SuluUtilsBundle();
         $bundles[] = new SuluNewsBundle();
 
         return $bundles;

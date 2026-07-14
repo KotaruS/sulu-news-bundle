@@ -1,3 +1,5 @@
 {
-    "sulu_news.news_route": "news"
+    "sulu_news.news_route": "news",
+    "sulu_news.search.index.news": "News / Blog",
+    "sulu_news.search.index.news_published": "News / Blog"
 }

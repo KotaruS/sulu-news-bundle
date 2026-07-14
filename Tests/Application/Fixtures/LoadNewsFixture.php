@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests\Application\Fixtures;
+namespace Kotaru\Bundle\SuluNewsBundle\Tests\Application\Fixtures;
 
-use App\Entity\News;
-use App\Entity\NewsTranslation;
-use App\Tests\Application\Fixtures\Traits\MediaTrait;
+use Kotaru\Bundle\SuluNewsBundle\Entity\News;
+use Kotaru\Bundle\SuluNewsBundle\Entity\NewsTranslation;
+use Kotaru\Bundle\SuluNewsBundle\Tests\Application\Fixtures\Traits\MediaTrait;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Manager\RouteManagerInterface;

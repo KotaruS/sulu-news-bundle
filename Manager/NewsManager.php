@@ -6,13 +6,19 @@ namespace Kotaru\Bundle\SuluNewsBundle\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
+use Kotaru\Bundle\SuluNewsBundle\Domain\Event\NewsCreatedEvent;
+use Kotaru\Bundle\SuluNewsBundle\Domain\Event\NewsModifiedEvent;
+use Kotaru\Bundle\SuluNewsBundle\Domain\Event\NewsRemovedEvent;
 use Kotaru\Bundle\SuluNewsBundle\Entity\NewsInterface;
+use Kotaru\Bundle\SuluNewsBundle\Event\NewsSearchDeindexEvent;
+use Kotaru\Bundle\SuluNewsBundle\Event\NewsSearchIndexEvent;
 use Kotaru\Bundle\SuluNewsBundle\Repository\NewsRepository;
 use Kotaru\SuluUtils\Common\MediaCopier;
 use Kotaru\SuluUtils\Manager\SuluMediaManager;
 use Kotaru\SuluUtils\Traits\CategorySetterTrait;
 use Kotaru\SuluUtils\Traits\DataSetterTrait;
 use Kotaru\SuluUtils\Traits\TagSetterTrait;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
@@ -21,6 +27,8 @@ use Sulu\Bundle\RouteBundle\Manager\RouteManagerInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class NewsManager
 {
@@ -35,6 +43,8 @@ class NewsManager
         protected CategoryRepositoryInterface $categoryRepository,
         protected TagManagerInterface $tagManager,
         protected MediaCopier $mediaCopier,
+        protected DomainEventCollectorInterface $domainEventCollector,
+        protected EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -148,22 +158,160 @@ class NewsManager
         return $media;
     }
 
-    public function create(string $locale): NewsInterface
+    // CRUD
+    public function create(string $locale, array $data): NewsInterface
     {
         $news = $this->newsRepository->create($locale);
+        $this->save($news);
+
+        $this->domainEventCollector->collect(
+            new NewsCreatedEvent($news)
+        );
+
+        $this->mapDataToEntity($data, $news);
+        if (null === $news->getPublishDate()) {
+            $news->setPublishDate(new \DateTimeImmutable('now'));
+        }
+        $this->save($news);
+        $this->eventDispatcher->dispatch(new NewsSearchIndexEvent($news));
+
         return $news;
     }
-    public function save(NewsInterface $news): void
+
+    public function update(NewsInterface $news, array $data): NewsInterface
+    {
+        $this->eventDispatcher->dispatch(new NewsSearchDeindexEvent($news));
+
+        $news=$this->modify($news, $data);
+
+        $this->eventDispatcher->dispatch(new NewsSearchIndexEvent($news));
+
+        return $news;
+    }
+    public function modify(NewsInterface $news, array $data): NewsInterface
+    {
+        $this->mapDataToEntity($data, $news);
+
+        $this->save($news, false);
+
+        $this->domainEventCollector->collect(
+            new NewsModifiedEvent($news)
+        );
+        $this->entityManager->flush();
+
+        return $news;
+    }
+    public function copy(NewsInterface $news): NewsInterface
+    {
+        $initialLocale = $news->getLocale();
+        $clonedNews = $this->fullClone($news);
+        $clonedNews->setExternal(false);
+        $clonedNews->setSource(null);
+        $clonedNews->setVisible(false);
+        foreach ($clonedNews->getTranslations() as $locale => $translation) {
+            $clonedNews->setLocale($locale);
+            $clonedNews->setTitle($clonedNews->getTitle() . ' (1)');
+            $this->setRoute($clonedNews);
+        }
+        $clonedNews->setLocale($initialLocale);
+        $this->save($clonedNews, false);
+
+        $this->domainEventCollector->collect(
+            new NewsCreatedEvent($clonedNews)
+        );
+        $this->entityManager->flush();
+        $this->eventDispatcher->dispatch(new NewsSearchIndexEvent($clonedNews));
+
+        return $clonedNews;
+    }
+    public function copyLocale(NewsInterface $news, string $from, array $to): ?NewsInterface
+    {
+        if (empty($to)) {
+            throw new \InvalidArgumentException('Destination url paremeter must be defined');
+        }
+        $this->eventDispatcher->dispatch(new NewsSearchDeindexEvent($news));
+        $originalLocale = $news->getLocale();
+        foreach ($to as $targetLocale) {
+            if ($from === $targetLocale) {
+                continue;
+            }
+            $news->setLocale($targetLocale);
+            $copyTranslation = $news->getTranslation($from);
+            if (null === $news->getTranslation($targetLocale)) {
+                $news->createTranslation($targetLocale);
+            }
+            $newTranslation = $news->getTranslation($targetLocale);
+            $newTranslation
+                ->setTitle($copyTranslation->getTitle())
+                ->setContent($copyTranslation->getContent())
+                ->setExtension($copyTranslation->getExtension())
+                ->setDescription($copyTranslation->getDescription());
+
+            /** @var MediaInterface */
+            $image = $copyTranslation->getImage();
+            if (null !== $image) {
+                $image = $this->getImageCopy($image);
+            }
+            if (null !== $newTranslation->getImage()) {
+                $this->mediaManager->delete($newTranslation->getImage()->getId());
+            }
+            $newTranslation->setImage($image);
+
+            if (empty($newTranslation->getTitle())) {
+                throw new UnprocessableEntityHttpException('Cannot save entity without title.');
+            }
+
+            $this->save($news, false);
+            if (null === $newTranslation->getRoute()) {
+                $this->generateRoute($news);
+            } else {
+                $this->updateRoute($news);
+            }
+        }
+        $news->setLocale($originalLocale);
+        $this->domainEventCollector->collect(
+            new NewsModifiedEvent($news)
+        );
+        $this->save($news);
+        $this->eventDispatcher->dispatch(new NewsSearchIndexEvent($news));
+
+        return $news;
+    }
+
+    public function enable(NewsInterface $news): NewsInterface
+    {
+        $this->eventDispatcher->dispatch(new NewsSearchDeindexEvent($news));
+        $this->modify($news, ['visible'=> true]);
+        $this->eventDispatcher->dispatch(new NewsSearchIndexEvent($news));
+        return $news;
+    }
+    public function disable(NewsInterface $news): NewsInterface
+    {
+        $this->modify($news, ['visible'=> false]);
+        $this->eventDispatcher->dispatch(new NewsSearchDeindexEvent($news));
+        return $news;
+    }
+
+    public function save(NewsInterface $news, bool $flush = true): void
     {
         $this->newsRepository->save($news);
-        $this->entityManager->flush();
+        if (true === $flush) {
+            $this->entityManager->flush();
+        }
     }
+
     public function persist(NewsInterface $news): void
     {
         $this->newsRepository->save($news);
     }
     public function remove(NewsInterface $news, bool $flush = true): void
     {
+        $this->domainEventCollector->collect(
+            new NewsRemovedEvent($news)
+        );
+        $this->domainEventCollector->dispatch();
+        $this->eventDispatcher->dispatch(new NewsSearchDeindexEvent($news));
+
         foreach ($news->getTranslations() as $translation) {
             $image = $translation->getImage();
             $translation->setImage(null);
@@ -176,10 +324,12 @@ class NewsManager
         if (true === $flush) {
             $this->entityManager->flush();
         }
+
     }
 
     public function removeTranslation(NewsInterface $news, $locale): bool
     {
+        $this->eventDispatcher->dispatch(new NewsSearchDeindexEvent($news));
         $translations = $news->getTranslations();
         $translation = $news->getTranslation($locale);
         if (0 === count(\array_filter($translations, fn($lang) => $lang !== $locale, \ARRAY_FILTER_USE_KEY))) {
@@ -201,102 +351,108 @@ class NewsManager
         if ($locale === $news->getDefaultLocale()) {
             $news->setDefaultLocale($this->newsRepository->getLocales($news)[0]);
         }
+        $this->domainEventCollector->collect(
+            new NewsModifiedEvent($news)
+        );
+        $this->save($news);
+        $this->eventDispatcher->dispatch(new NewsSearchIndexEvent($news));
+
         return $removed;
     }
 
-    public function copyPure(NewsInterface $source, NewsInterface $target): NewsInterface
-    {
-        $originalLocaleS = $source->hasLocale() ? $source->getLocale() : null;
-        $originalLocaleT = $target->hasLocale() ? $target->getLocale() : null;
-        $locales = $this->newsRepository->getLocales($source);
-        $target
-            ->setDefaultLocale($source->getDefaultLocale())
-            ->setVisible($source->isVisible())
-            ->setExternal($source->isExternal())
-            ->setSource($source->getSource())
-            ->setPublishDate($source->getPublishDate())
-        ;
+    // public function copyPure(NewsInterface $source, NewsInterface $target): NewsInterface
+    // {
+    //     $originalLocaleS = $source->hasLocale() ? $source->getLocale() : null;
+    //     $originalLocaleT = $target->hasLocale() ? $target->getLocale() : null;
+    //     $locales = $this->newsRepository->getLocales($source);
+    //     $target
+    //         ->setDefaultLocale($source->getDefaultLocale())
+    //         ->setVisible($source->isVisible())
+    //         ->setExternal($source->isExternal())
+    //         ->setSource($source->getSource())
+    //         ->setPublishDate($source->getPublishDate())
+    //     ;
 
-        foreach ($locales as $locale) {
-            $source->setLocale($locale);
-            $target->setLocale($locale);
+    //     foreach ($locales as $locale) {
+    //         $source->setLocale($locale);
+    //         $target->setLocale($locale);
 
-            $target
-                ->setTitle($source->getTitle())
-                ->setExtension($source->getExtension())
-                ->setDescription($source->getDescription())
-                ->setContent($source->getContent())
-            ;
-        }
-        if (null !== $originalLocaleS) {
-            $source->setLocale($originalLocaleS);
-        }
-        if (null !== $originalLocaleT) {
-            $target->setLocale($originalLocaleT);
-        }
-        $this->persist($source);
-        $this->persist($target);
-        return $target;
-    }
-    public function copyMutate(NewsInterface $source, NewsInterface $target, bool $override = false): NewsInterface
-    {
-        $originalLocaleS = $source->hasLocale() ? $source->getLocale() : null;
-        $originalLocaleT = $target->hasLocale() ? $target->getLocale() : null;
-        $locales = $this->newsRepository->getLocales($source);
+    //         $target
+    //             ->setTitle($source->getTitle())
+    //             ->setExtension($source->getExtension())
+    //             ->setDescription($source->getDescription())
+    //             ->setContent($source->getContent())
+    //         ;
+    //     }
+    //     if (null !== $originalLocaleS) {
+    //         $source->setLocale($originalLocaleS);
+    //     }
+    //     if (null !== $originalLocaleT) {
+    //         $target->setLocale($originalLocaleT);
+    //     }
+    //     $this->persist($source);
+    //     $this->persist($target);
+    //     return $target;
+    // }
+    // public function copyMutate(NewsInterface $source, NewsInterface $target, bool $override = false): NewsInterface
+    // {
+    //     $originalLocaleS = $source->hasLocale() ? $source->getLocale() : null;
+    //     $originalLocaleT = $target->hasLocale() ? $target->getLocale() : null;
+    //     $locales = $this->newsRepository->getLocales($source);
 
-        $this->setCategories(
-            $target,
-            \array_map(fn($category) => $category->getId(), $source->getCategories()->toArray())
-        );
-        $this->setTags(
-            $target,
-            \array_map(fn($tag) => $tag->getId(), $source->getTags()->toArray())
-        );
+    //     $this->setCategories(
+    //         $target,
+    //         \array_map(fn($category) => $category->getId(), $source->getCategories()->toArray())
+    //     );
+    //     $this->setTags(
+    //         $target,
+    //         \array_map(fn($tag) => $tag->getId(), $source->getTags()->toArray())
+    //     );
 
-        foreach ($locales as $locale) {
-            $source->setLocale($locale);
-            $target->setLocale($locale);
+    //     foreach ($locales as $locale) {
+    //         $source->setLocale($locale);
+    //         $target->setLocale($locale);
 
-            if (null !== $source->getImage() || $override) {
-                $img = $source->getImage();
-                $targetImage = $target->getImage();
-                if (null !== $targetImage) {
-                    $this->customMediaManager->delete($targetImage);
-                }
-                $target->setImage($img);
-            }
+    //         if (null !== $source->getImage() || $override) {
+    //             $img = $source->getImage();
+    //             $targetImage = $target->getImage();
+    //             if (null !== $targetImage) {
+    //                 $this->customMediaManager->delete($targetImage);
+    //             }
+    //             $target->setImage($img);
+    //         }
 
-            $oldRoute = $source->getRoute();
-            if (null === $oldRoute && false === $override) {
-                continue;
-            }
-            $newRoute = $this->setRoute($target, $oldRoute?->getPath());
+    //         $oldRoute = $source->getRoute();
+    //         if (null === $oldRoute && false === $override) {
+    //             continue;
+    //         }
+    //         $newRoute = $this->setRoute($target, $oldRoute?->getPath());
 
-            if ($target->getTitle() !== $source->getTitle()) {
-                // flip the routes
-                $target->setRoute($oldRoute);
-                $source->setRoute($newRoute);
-                $newRoute?->setEntityId($source->getId());
-                $oldRoute?->setEntityId($target->getId());
-            }
-        }
-        if (null !== $originalLocaleS) {
-            $source->setLocale($originalLocaleS);
-        }
-        if (null !== $originalLocaleT) {
-            $target->setLocale($originalLocaleT);
-        }
-        $this->persist($source);
-        $this->persist($target);
-        return $target;
-    }
+    //         if ($target->getTitle() !== $source->getTitle()) {
+    //             // flip the routes
+    //             $target->setRoute($oldRoute);
+    //             $source->setRoute($newRoute);
+    //             $newRoute?->setEntityId($source->getId());
+    //             $oldRoute?->setEntityId($target->getId());
+    //         }
+    //     }
+    //     if (null !== $originalLocaleS) {
+    //         $source->setLocale($originalLocaleS);
+    //     }
+    //     if (null !== $originalLocaleT) {
+    //         $target->setLocale($originalLocaleT);
+    //     }
+    //     $this->persist($source);
+    //     $this->persist($target);
+    //     return $target;
+    // }
 
-    public function copy(NewsInterface $source, NewsInterface $target): NewsInterface
-    {
-        $this->copyPure($source, $target);
-        $this->copyMutate($source, $target);
-        return $target;
-    }
+    // public function copy(NewsInterface $source, NewsInterface $target): NewsInterface
+    // {
+    //     $this->copyPure($source, $target);
+    //     $this->copyMutate($source, $target);
+    //     return $target;
+    // }
     public function fullClone(NewsInterface $news, $createRoutes = false): NewsInterface
     {
         $clonedNews = clone $news;
