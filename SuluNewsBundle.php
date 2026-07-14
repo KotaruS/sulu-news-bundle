@@ -163,7 +163,7 @@ class SuluNewsBundle extends AbstractBundle
                             'view' => [
                                 'name' => NewsAdmin::EDIT_FORM_VIEW,
                                 'result_to_view' => [
-                                    'id' => 'id',
+                                    'properties/news_id' => 'id',
                                     'locale' => 'locale',
                                 ],
                             ],

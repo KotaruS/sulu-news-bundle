@@ -11,6 +11,7 @@
             <field name="title" expr="object.getTitle()" type="string"/>
             <field name="description" expr="object.getDescription()" type="string"/>
             <field name="imageId" expr="object.getImageId()" type="string"/>
+            <field name="news_id" expr="object.getNews().getId()" type="string"/>
         </fields>
     </mapping>
 </massive-search-mapping>
