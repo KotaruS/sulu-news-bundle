@@ -54,7 +54,8 @@ class NewsManager
      */
     public function mapDataToEntity(array $data, $entity): ?NewsInterface
     {
-        if (!isset($data['image'])) {
+        // when image is null we transform it a little
+        if (\array_key_exists('image',$data) && !isset($data['image'])) {
             $data['image'] = ['id' => null];
         }
 
